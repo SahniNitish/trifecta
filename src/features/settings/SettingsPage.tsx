@@ -1,7 +1,28 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db } from '../../db/db';
+import {
+  db,
+  type Task,
+  type Transaction,
+  type Budget,
+  type WorkoutTemplate,
+  type WorkoutSession,
+  type CardioLog,
+  type BodyMetric,
+  type Setting,
+} from '../../db/db';
+
+interface BackupData {
+  tasks?: Task[];
+  transactions?: Transaction[];
+  budgets?: Budget[];
+  workoutTemplates?: WorkoutTemplate[];
+  workoutSessions?: WorkoutSession[];
+  cardioLogs?: CardioLog[];
+  bodyMetrics?: BodyMetric[];
+  settings?: Setting[];
+}
 
 export function SettingsPage() {
   const navigate = useNavigate();
@@ -47,19 +68,34 @@ export function SettingsPage() {
     setImporting(true);
     try {
       const text = await file.text();
-      const data = JSON.parse(text);
+      const data = JSON.parse(text) as BackupData;
       await db.transaction('rw', db.tables, async () => {
         for (const table of db.tables) {
           await table.clear();
         }
-        if (data.tasks) await db.tasks.bulkAdd(data.tasks);
-        if (data.transactions) await db.transactions.bulkAdd(data.transactions);
-        if (data.budgets) await db.budgets.bulkAdd(data.budgets);
-        if (data.workoutTemplates) await db.workoutTemplates.bulkAdd(data.workoutTemplates);
-        if (data.workoutSessions) await db.workoutSessions.bulkAdd(data.workoutSessions);
-        if (data.cardioLogs) await db.cardioLogs.bulkAdd(data.cardioLogs);
-        if (data.bodyMetrics) await db.bodyMetrics.bulkAdd(data.bodyMetrics);
-        if (data.settings) await db.settings.bulkPut(data.settings);
+        if (data.tasks?.length) {
+          await db.tasks.bulkAdd(data.tasks.map(({ id: _, ...t }) => t));
+        }
+        if (data.transactions?.length) {
+          await db.transactions.bulkAdd(data.transactions.map(({ id: _, ...t }) => t));
+        }
+        if (data.budgets?.length) {
+          await db.budgets.bulkAdd(data.budgets.map(({ id: _, ...t }) => t));
+        }
+        if (data.workoutTemplates?.length) {
+          await db.workoutTemplates.bulkAdd(data.workoutTemplates.map(({ id: _, ...t }) => t));
+        }
+        if (data.workoutSessions?.length) {
+          await db.workoutSessions.bulkAdd(data.workoutSessions.map(({ id: _, ...t }) => t));
+        }
+        if (data.cardioLogs?.length) {
+          await db.cardioLogs.bulkAdd(data.cardioLogs.map(({ id: _, ...t }) => t));
+        }
+        if (data.bodyMetrics?.length) {
+          await db.bodyMetrics.bulkAdd(data.bodyMetrics.map(({ id: _, ...t }) => t));
+        }
+        if (data.settings?.length) await db.settings.bulkPut(data.settings);
+        await db.settings.put({ key: 'seeded', value: 'true' });
       });
       alert('Data restored successfully');
     } catch {

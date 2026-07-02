@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { db, type Task } from '../../db/db';
 import { todayStr, tomorrowStr } from '../../lib/dates';
 import { Sheet } from '../../components/Sheet';
@@ -20,7 +20,8 @@ export function AddTaskSheet({ open, onClose, editTask }: AddTaskSheetProps) {
     setPriority('med');
   };
 
-  const handleOpen = () => {
+  useEffect(() => {
+    if (!open) return;
     if (editTask) {
       setTitle(editTask.title);
       setDueDate(editTask.dueDate);
@@ -28,7 +29,7 @@ export function AddTaskSheet({ open, onClose, editTask }: AddTaskSheetProps) {
     } else {
       reset();
     }
-  };
+  }, [open, editTask]);
 
   const save = async () => {
     if (!title.trim()) return;
@@ -49,7 +50,7 @@ export function AddTaskSheet({ open, onClose, editTask }: AddTaskSheetProps) {
 
   return (
     <Sheet open={open} onClose={onClose} title={editTask ? 'Edit Task' : 'Add Task'}>
-      <div onFocus={handleOpen} className="space-y-4">
+      <div className="space-y-4">
         <input
           autoFocus
           value={title}

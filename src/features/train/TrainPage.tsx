@@ -112,7 +112,14 @@ export function TrainPage() {
           {recentSessions && recentSessions.length > 0 && (
             <div>
               <p className="text-xs text-muted uppercase tracking-wide mb-2">Recent</p>
-              <HistoryList />
+              <div className="space-y-2">
+                {recentSessions.map((s) => (
+                  <div key={s.id} className="p-3 bg-surface rounded-xl">
+                    <p className="font-medium">{s.templateName}</p>
+                    <p className="text-xs text-muted">{s.date}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

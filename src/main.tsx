@@ -5,10 +5,13 @@ import App from './App';
 import { seedIfNeeded } from './db/seed';
 
 async function init() {
-  await seedIfNeeded();
-
-  if (navigator.storage?.persist) {
-    await navigator.storage.persist();
+  try {
+    await seedIfNeeded();
+    if (navigator.storage?.persist) {
+      await navigator.storage.persist();
+    }
+  } catch (err) {
+    console.error('Init failed:', err);
   }
 
   createRoot(document.getElementById('root')!).render(

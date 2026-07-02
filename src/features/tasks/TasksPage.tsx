@@ -14,7 +14,9 @@ export function TasksPage() {
   const [editTask, setEditTask] = useState<Task | null>(null);
 
   const tasks = useLiveQuery(async () => {
-    const all = await db.tasks.orderBy('createdAt').reverse().toArray();
+    const all = (await db.tasks.toArray()).sort(
+      (a, b) => b.createdAt.localeCompare(a.createdAt),
+    );
     const today = todayStr();
 
     const sorted = [...all].sort((a, b) => {

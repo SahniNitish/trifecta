@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && cp dist/index.html dist/404.html",
     "lint": "oxlint",
     "preview": "vite preview",
     "deploy": "npm run build && gh-pages -d dist"
@@ -27,6 +27,7 @@
     "@vitejs/plugin-react": "^6.0.3",
     "gh-pages": "^6.3.0",
     "oxlint": "^1.71.0",
+    "playwright": "^1.61.1",
     "tailwindcss": "^4.3.2",
     "typescript": "~6.0.2",
     "vercel": "^54.18.7",

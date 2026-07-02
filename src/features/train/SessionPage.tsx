@@ -14,12 +14,8 @@ export function SessionPage() {
 
   const lastSession = useLiveQuery(async () => {
     if (!session) return null;
-    const prev = await db.workoutSessions
-      .where('templateName')
-      .equals(session.templateName)
-      .and((s) => s.id !== sessionId)
-      .reverse()
-      .sortBy('date');
+    const prev = (await db.workoutSessions.orderBy('date').reverse().toArray())
+      .filter((s) => s.templateName === session.templateName && s.id !== sessionId);
     return prev[0] ?? null;
   }, [session, sessionId]);
 
