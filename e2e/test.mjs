@@ -41,7 +41,7 @@ await test('Tab navigation works', async () => {
 });
 
 await test('Add task flow', async () => {
-  await page.goto(`${BASE}/tasks`, { waitUntil: 'networkidle' });
+  await page.goto(`${BASE}/#/tasks`, { waitUntil: 'networkidle' });
   await page.locator('button', { hasText: '+' }).last().click();
   await page.waitForSelector('text=Add Task');
   await page.fill('input[placeholder="What needs doing?"]', 'E2E test task');
@@ -57,7 +57,7 @@ await test('Check off task', async () => {
 });
 
 await test('Add expense flow', async () => {
-  await page.goto(`${BASE}/money`, { waitUntil: 'networkidle' });
+  await page.goto(`${BASE}/#/money`, { waitUntil: 'networkidle' });
   await page.locator('button', { hasText: '+' }).last().click();
   await page.waitForSelector('text=Add Transaction');
   await page.fill('input[placeholder="0.00"]', '25.50');
@@ -67,7 +67,7 @@ await test('Add expense flow', async () => {
 });
 
 await test('Start workout flow', async () => {
-  await page.goto(`${BASE}/train`, { waitUntil: 'networkidle' });
+  await page.goto(`${BASE}/#/train`, { waitUntil: 'networkidle' });
   const startBtn = page.locator('button', { hasText: /Start workout|Continue/ }).first();
   await startBtn.click({ timeout: 5000 });
   await page.waitForSelector('text=Finish workout', { timeout: 5000 });
@@ -85,7 +85,7 @@ await test('Settings page loads', async () => {
 });
 
 await test('Direct subroute loads (SPA)', async () => {
-  await page.goto(`${BASE}/tasks`, { waitUntil: 'networkidle' });
+  await page.goto(`${BASE}/#/tasks`, { waitUntil: 'networkidle' });
   await page.waitForSelector('h1:text-is("Tasks")', { timeout: 5000 });
 });
 
